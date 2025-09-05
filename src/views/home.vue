@@ -9,7 +9,7 @@
         Trier par date
       </button>
     </div>
-    <tableau v-if="data" :data="data" />
+    <tableau v-if="isOk" :data="data" />
     <p v-else class="p-50">Vous n'avez aucune note</p>
   </div>
 </template>
@@ -22,10 +22,15 @@ import Header from "../components/header.vue";
 
 const data = ref(null);
 const isSort = ref(false);
+const isOk = ref(false);
+
 
 onMounted(async () => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/notes`);
   data.value = await response.json();
+ if(data.value.length>0){
+  isOk.value = true;
+ }
   watch(isSort, async () => {
     if (isSort.value) {
       trierD(data.value);
